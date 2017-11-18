@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org">
+<head th:replace="parts/base :: meta"></head>
+
+<body>
+
+<div class="wrapper">
+    <header class="header">
+        <div class="header_block" th:replace="parts/base :: header"></div>
+    </header>
+
+    <main class="content" tiles:fragment="content">
+        <div class="content_block">
+            <div class="title_f">
+                <a href="#" th:href="${docInfo.url}" target="_blank">
+                    <h4 th:text="${docInfo.title}">Мамонты</h4>
+                </a>
+            </div>
+            <div id="article-container">
+                <div th:each="fact: ${facts}" id="pos.15" th:id="'pos.' + ${fact.pos}" th:text="${fact.content}">
+                    This is very interesting fact
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- /container -->
+
+    <div tiles:fragment="scripts">
+        <script src="../../js/document.js" th:src="@{/js/document.js}"></script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            var pos = /*[[${selectedFactPos}]]*/ 157635;
+            if (pos > 0) {
+                window.onload = function () {
+                    var topSnippet = $('#pos\\.' + pos);
+                    topSnippet.css('border', '1px dashed grey');
+                    // Scroll only if snippet is not in the viewport
+                    if (!isElementInViewport(topSnippet)) {
+                        $('body, html').animate({scrollTop: topSnippet.offset().top - 100});
+                    }
+                };
+            }
+            /*]]>*/
+        </script>
+    </div>
+
+</div>
+<!-- /wrapper -->
+
+<footer class="footer" th:replace="parts/base :: footer"></footer>
+
+</body>
+</html>

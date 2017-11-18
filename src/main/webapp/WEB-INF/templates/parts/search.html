@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <title>My profile</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link href="../../../css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
+    <link href="../../../css/vendor/jquery-ui-1.11.4-custom.css" th:href="@{/css/vendor/jquery-ui-1.11.4-custom.min.css}" rel="stylesheet"/>
+    <script th:inline="javascript">var ctx = [[@{'/'}]] /*"http://localhost:8080/factbook"*/</script>
+    <script type="text/javascript" th:href="@{/js/vendor/jquery-2.1.0.min.js}" src="../../../js/vendor/jquery-2.1.0.js"></script>
+    <script type="text/javascript" th:href="@{/js/vendor/jquery-ui-1.11.4-custom.min.js}" src="../../../js/vendor/jquery-ui-1.11.4-custom.js"></script>
+    <script type="text/javascript" th:href="@{/js/common.js}" src="../../../js/common.js"></script>
+</head>
+
+
+    <span tiles:fragment="search">
+			<div class="clear1"></div>
+			<div class="block_search" tiles:fragment="search" th:fragment="search">
+                <form method="GET" name="searchForm" id="searchForm" role="form"
+                      th:action="${profile != null} ? @{${'/profile/found/' + profile.id + '/'}} : @{/profile/new/}">
+                    <div>
+                            <input name="query" type="text" id="query" class="search_input"
+                               th:value="${profile != null} ? ${profile.query}"/>
+                            <button type="submit" name="search" class="search_btn">
+                                <span class="icon_search"></span>
+                                Search
+                            </button>
+
+                        <p class="debug_info" th:if="${viewDebug != null and viewDebug}">
+                            <span style="float: left;">
+                                <input type="checkbox" name="context" id="context" checked="checked"
+                                   th:checked="${context == null or context}"/>
+                                <label for="context">context search</label>
+                                <input type="checkbox" name="semantic" id="semantic" style="margin-left: 20px;" checked="checked"
+                                       th:checked="${semantic == null or semantic}"/>
+                                <label for="semantic">semantic search</label>
+                                <input type="checkbox" name="nocache" id="nocache" style="margin-left: 20px;" checked="checked"
+                                       th:checked="${nocache}"/>
+                                <label for="semantic">no cache</label>
+                            </span>
+                            <span th:if="${profile != null}" style="margin-left: auto; margin-right: 0;">In current topic</span>
+                        </p>
+                    </div>
+                </form>
+            </div>
+			<div class="clear"></div>
+		</span>
+</html>

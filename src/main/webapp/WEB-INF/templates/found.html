@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:tiles="http://www.thymeleaf.org">
+<head th:fragment="meta">
+	<meta charset="utf-8" />
+	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<title>My profile</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<link href="../../css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
+	<link href="../../css/vendor/jquery-ui-1.11.4-custom.css" th:href="@{/css/vendor/jquery-ui-1.11.4-custom.min.css}" rel="stylesheet"/>
+	<script th:inline="javascript">var ctx = [[@{'/'}]] /*"http://localhost:8080/factbook"*/</script>
+	<script type="text/javascript" th:href="@{/js/vendor/jquery-2.1.0.min.js}" src="../../js/vendor/jquery-2.1.0.js"></script>
+	<script type="text/javascript" th:href="@{/js/vendor/jquery-ui-1.11.4-custom.min.js}" src="../../js/vendor/jquery-ui-1.11.4-custom.js"></script>
+	<script type="text/javascript" th:href="@{/js/common.js}" src="../../js/common.js"></script>
+</head>
+
+<body>
+
+<div class="wrapper">
+	<header class="header">
+		<div class="header_block" th:replace="parts/base :: header"></div>
+
+
+		<div class="header_block" tiles:fragment="crumbs">
+			<a href="#" th:href="@{/home}" class="step">Step 1: Define a Topic</a>
+			<a href="#" th:href="@{${'/profile/found/' + profile.id + '/phrases'}}" class="step active_step">Step 2: More facts</a>
+			<a href="#" th:href="@{${'/profile/kept/' + profile.id}}" class="step" id="txt1">Step 3: Export facts  <span class="blue_s" id="profileKept" th:text="${'('+profile.kept+')'}">(39)</span></a>
+			<div class="clear"></div>
+		</div>
+	</header>
+<!--
+ *****************************************************************************************************
+ Search results
+ *****************************************************************************************************
+ -->
+
+	<main class="content" tiles:fragment="content">
+		<form id="KeepDelete" method="POST">
+			<input type="hidden" name="profileId" id="profileId" value="13" th:value="(${profile != null}) ? ${profile.id}"/>
+			<input type="hidden" name="url"/>
+			<input type="hidden" name="posRangeMin"/>
+			<input type="hidden" name="posRangeMax"/>
+			<input type="hidden" name="snippet"/>
+		</form>
+		<div class="content_block">
+			<h1 th:inline="text" id="profile.name">
+				[[(!${viewDebug}) ? ${profile.name} : '']]
+				<a th:if="${viewDebug}"
+				   th:href="@{${'/profile/view/' + profile.id + '?query=' + profile.query}}"
+						th:text="${profile.name}">
+					[[${profile.name}]]</a>
+			</h1>
+            <div th:each="doc, docIter: ${docs}">
+                <!-- ******************************************************************************
+                 Document header
+                 ******************************************************************************* -->
+               
+                <div class="title_f" id="article.1" th:id="${'article.' + docIter.index}">
+					<span th:text="${#strings.abbreviate(doc.title,65)}"> Document title </span>
+					<span class="published_date" th:if="${doc.published != null}"
+						   th:text="${' on ' + #joda.format(doc.published, 'MMM.d, Y')}">
+						on Jan. 2, 1999
+					</span>
+	            	<a href="#" th:href="${doc.url}" target="_blank" id="url.1" th:id="${'url.' + docIter.index}"
+					   th:text="${doc.docType.asString()}">PDF</a>
+                </div>
+
+                <!-- ******************************************************************************
+                 Found facts
+                 ******************************************************************************* -->
+                <div class="block_fact row article.1" th:class="${'block_fact row article.' + docIter.index}" id="phrase.1.1"
+					th:each="fact: ${facts[docIter.index]}"
+					th:with="ref=${docIter.index + '.' + fact.pos}"
+					th:id="${'phrase.' + ref}" style="margin-bottom: 10px">
+	                <input type="hidden" id="fingerprints.1.1" th:id="${'fingerprints.' + ref}" value="c1ac06a11fdb86d09aac264a7f46c88c" th:value="${fact.fingerprint}"/>
+	                <input type="hidden" id="topPos.1.1" th:id="${'topPos.' + ref}" value="1" th:value="${fact.pos}"/>
+	                <span th:if="${doc.pos != 0}" class="left_sk"
+	                      onclick="showAbove(1,1);" th:onclick="${'showAbove(' + docIter.index + ', ' + fact.pos + ')'}"
+	                      id="snipUp.1.1" th:id="${'snipUp.' + ref}"></span>
+		                <div class="p_text" id="snippet.1.1"  th:id="${'snippet.' + ref}" th:utext="${fact.snippet}">
+		                 	Here is a sentence that relates to the search term. It will display a fact for the user. Keep reading this fact by using the arrows, left to right. Or view the source by clicking the link. You must realise that this sentence is three rows long.
+		              	</div>                    
+	                <span class="right_sk"
+	                      onclick="showBelow(1,1);" th:onclick="${'showBelow(' + docIter.index + ', ' + fact.pos + ')'}"
+	                      id="snipDown.1.1" th:id="${'snipDown.' + ref}"></span>
+	                <input type="hidden" id="bottomPos.1.1"  th:id="${'bottomPos.' + ref}" value="1" th:value="${fact.pos}"/>
+
+					<small th:if="${viewDebug}" class="debug_info">
+						weight:
+						(factuality: <span th:text="${fact.factuality}">893</span>)
+						<span th:text="${fact.weight}">893</span>
+					</small>
+					<a th:if="${viewDebug}" class="debug_info button" style="margin-left: 20px"
+					   onclick="show_debug(1,1)" th:onclick="${'show_debug(' + docIter.index + ',' + fact.pos + ')'}">
+						<span class="glyphicon glyphicon-cog"></span>
+					</a>
+
+					<a th:if="${viewDebug}" class="debug_info" href="#" style="margin-left: 20px"
+					   th:href="@{/view_doc(url=${doc.url},pos=${fact.pos})}" target="_blank">
+						<span class="glyphicon glyphicon-file"></span>
+					</a>
+
+	                <span class="save_fact" onclick="saveDoc(1,1)" th:onclick="${'saveDoc(' + docIter.index + ', ' + fact.pos + ')'}" title="This is similar to what I'm looking for, keep this fact!" style="cursor: pointer;"> </span>
+					<a id="linkBack.1.1" th:id="${'linkBack.' + ref}" class="link_back" style="display: none;">
+					   <span onclick="back(1,1);" th:onclick="${'back(' + docIter.index + ', ' + fact.pos + ')'}"
+						id="back.1.1" th:id="${'back.' + ref}">back</span>
+					</a>
+					<div th:if="${viewDebug}" th:id="${'debug.' + ref}" id="debug.1.1" class="search_details">
+						<div th:each="query, queryIter: ${fact.debugQueries}" class="debug_info">
+							<div th:text="${query}" class="query">SELECT * FROM test WHERE MATCH('one' | 'two');</div>
+							<div th:each="word, wordIter:${fact.debugWords[queryIter.index]}" class="word">
+								<div th:text="${word}" class="word">one</div>
+								<div th:text="${fact.debugWeights[queryIter.index][wordIter.index]}">5</div>
+							</div>
+						</div>
+					</div>
+                </div>
+			</div>
+			<a href="#"
+			   th:style="(${offset == -1}) ? 'display: none;'"
+               th:href="@{${'/profile/found/' + profile.id + '/phrases'}(offset=${offset},context=${context},semantic=${semantic},nocache=${nocache})}"
+               class="link_more" id="link_more">Step 2: More Facts</a>
+		</div>
+	</main><!-- .content -->
+	
+	<div tiles:fragment="scripts">
+		<script th:inline="javascript">var aboveBelowLog = [];</script>
+		<script th:inline="javascript">var profileKept = [[${profile.kept}]];</script>
+	    <script src="../../js/profile.js" th:src="@{/js/profile.js}"></script>
+	</div>
+
+</div><!-- .wrapper -->
+
+<footer class="footer" th:replace="parts/base :: footer"></footer>
+
+</body>
+</html>

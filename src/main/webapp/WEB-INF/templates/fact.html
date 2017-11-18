@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org">
+<head th:replace="parts/base :: meta"></head>
+
+<body>
+
+<div class="wrapper">
+    <header class="header">
+        <div class="header_block" th:replace="parts/base :: header"></div>
+    </header>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- All above is only used for static prototyping purposes. At runtime,           -->
+    <!-- Tiles will only use the body fragment defined with tiles:fragment="content",  -->
+    <!-- as specified at the corresponding tiles-defs.xml file.                        -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <main class="content" tiles:fragment="content">
+        <div class="content_block">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th style="width: 10%">factURL</th>
+                    <th style="width: 5%">Position</th>
+                    <th style="width: 10%">fingerprint</th>
+                    <th style="width: 5%">factuality</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="fact, factNm: ${facts}">
+                    <tr>
+                        <td colspan="5"><h4 th:text="${fact.content}">Слой грушевидных нейронов насчитывает у человека
+                            около 15 млн нейронов,
+                            дендриты которых ветвятся в молекулярном слое Аксоны грушевидных нейронов спускаются к ядрам
+                            мозжечка, а небольшое их количество заканчивается на пристеночные овых ядрах Аксоны
+                            последних
+                            клеток составляютть единственный эфферентный путь от мозжечка</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="http://ru.wikipedia.org/wiki/Apple" th:href="${fact.url}" th:text="${fact.url}">
+                                ru.wikipedia.org/wiki/Apple
+                            </a>
+                        </td>
+                        <td th:text="${fact.pos}">3</td>
+                        <td th:text="${fact.fingerprint}">c1ac06a11fdb86d09aac264a7f46c88c</td>
+                        <td th:text="${fact.factuality}">352</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5"><h3>Classifier features</h3></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>feature</th>
+                                    <th>value</th>
+                                    <th>prob HAM</th>
+                                    <th>prob GARB</th>
+                                    <th>ratio</th>
+                                </tr>
+                                <tr th:each="feature: ${classifierRows[factNm.index]}">
+                                    <td th:text="${feature.feature}">WORDS</td>
+                                    <td th:text="${feature.value}">HAM</td>
+                                    <td th:text="${#numbers.formatDecimal(feature.probHam,1,3)}">0.59457</td>
+                                    <td th:text="${#numbers.formatDecimal(feature.probGarbage,1,3)}">0.59457</td>
+                                    <td th:text="${#numbers.formatDecimal(feature.ratio,1,3)}">0.59457</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5"><h3>Found by queries</h3></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <table class="table table-bordered">
+                                <tr th:each="query, queryIndex: ${fact.debugQueries}">
+                                    <td>
+                                        <div th:text="${query}">SELECT * FROM test WHERE MATCH('one' | 'two');</div>
+                                        <div th:each="word, wordIndex:${fact.debugWords[queryIndex]}">
+                                            <div th:text="${word}" style="float: left; margin-right: 5px">one</div>
+                                            <div th:text="${fact.debugWeights[queryIndex][wordIndex]}">5</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </main> <!-- /container -->
+</div> <!-- /wrapper -->
+
+<footer class="footer" th:replace="parts/base :: footer"></footer>
+
+</body>
+</html>
