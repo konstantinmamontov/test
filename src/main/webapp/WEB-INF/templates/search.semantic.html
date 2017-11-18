@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org">
+<head th:replace="parts/base :: meta"></head>
+
+<body>
+<div class="wrapper">
+    <header class="header">
+        <div class="header_block" th:replace="parts/base :: header"></div>
+        <span tiles:fragment="search">
+			<div class="clear1"></div>
+			<div class="block_search" style="max-width: 600px;">
+                <form method="GET" name="searchForm" id="searchForm" role="form"
+                      th:action="@{/debug/semanticSearch}">
+                    <input name="query" type="text" id="query"
+                           class="search_input" th:value="${query}"/>
+                    <button type="submit" name="search" class="search_btn">
+                        <span class="icon_search"></span>
+                        Search
+                    </button>
+                </form>
+            </div>
+			<div id="alert.placeholder"></div>
+			<div class="clear"></div>
+		</span>
+        <div class="header_block" tiles:fragment="crumbs"></div>
+    </header>
+
+<main class="content" tiles:fragment="content">
+    <div class="content_block">
+        <!-- Query phrase tree -->
+        <div>
+            <pre th:text="${queryTreeStr}">
+                ├── hidden subsidies ID:2471031 Stem:{0, , mem:[795, 2683, 4241, 7011, 7511, 8473, 10315, 11282]} Tag:167 End:476
+                │   ├── hidden ID:2471031 Stem:{66544, (hidden, mem:[6, 12, 47, 53, 73, 84, 112, 118]} Tag:15 End:476
+                │   └── subsidies ID:2447357 Stem:{4553, (subsidi, mem:[6, 42, 64, 79, 111, 118, 123, 125]} Tag:9 End:19
+            </pre>
+        </div>
+        <div th:if="${profile != null and profile.lines != null}" style="margin-bottom: 15px">
+            <h2>Profile</h2>
+            <div th:each="line, lineStat: ${profile.lines}">
+                <span th:text="${'line ' + lineStat.count}">line 1</span>
+                <span th:text="${line.randomIndexHash}">DfjrowHHof=dfs</span> ->
+                <span th:each="wordgramm : ${line.words}">
+                    <span th:each="wordform : ${wordgramm}">
+                        [<span th:text="${wordform.word}">кофе эспессо</span>]
+                    </span>
+                </span>
+                weight: <span th:text="${line.weight}">20</span>
+            </div>
+        </div>
+
+        <div th:if="${idioms != null}">
+            <h2>SEARCH RESULTS</h2>
+            <div th:each="idiom: ${idioms}">
+                <div>
+                    <div th:text="${idiom.idiom}">мамонты обладали</div>
+                    <div style="padding-bottom: 5px" class="debug_info">
+                        sense:
+                        <span th:text="${idiom.randomIndex}">DfjrowHHof=dfs</span>
+                        <span th:text="${idiom.mem}">[6, 42, 64, 79, 111, 118, 123, 125]</span>
+                    </div>
+                    <div class="debug_info">Weight: <span th:text="${idiom.weight}">334</span></div>
+                </div>
+                <div style="padding-bottom: 10px">
+                    <hr/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../../js/vendor/jquery-2.1.0.min.js"></script>
+</main> <!-- /container -->
+
+</div> <!-- /wrapper -->
+
+<footer class="footer" th:replace="parts/base :: footer"></footer>
+
+</body>
+</html>

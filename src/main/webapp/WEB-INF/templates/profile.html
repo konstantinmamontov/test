@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org">
+<head th:replace="parts/base :: meta"></head>
+
+<body>
+
+<div class="wrapper">
+
+    <header class="header">
+        <div class="header_block" th:replace="parts/base :: header"></div>
+    </header>
+
+    <!-- Profile lines -->
+    <main class="content" tiles:fragment="content">
+        <div class="content_block">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 5%">NN</th>
+                    <th style="width: 5%">Weight</th>
+                    <th style="width: 35%">Sense</th>
+                    <th style="width: 55%">Context</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="active" th:each="line, lineStat: ${profile.lines}" th:class="${lineStat.odd}? 'active'">
+                    <td th:text="${lineStat.count}">1</td>
+                    <td th:text="${line.weight}">176.0</td>
+                    <td>
+                        <div>[<span th:each="memId: ${line.mem}" th:text="${memId} + ' '"></span>]</div>
+                    </td>
+                    <td>
+                        <span th:each="wordgramm : ${line.words}">
+                            <span th:each="wordform : ${wordgramm}">
+                                [<span th:text="${wordform.word}">кофе эспессо</span>]&nbsp;
+                            </span>
+                        </span>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        </div>
+    </main>
+</div><!-- .wrapper -->
+
+<footer class="footer" th:replace="parts/base :: footer"></footer>
+
+</body>
+</html>

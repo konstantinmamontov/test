@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:tiles="http://www.thymeleaf.org">
+<head th:fragment="meta">
+	<meta charset="utf-8" />
+	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<title>My profile</title>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<link href="../../../css/style.css" th:href="@{/css/style.css}" rel="stylesheet"/>
+	<link href="../../../css/vendor/jquery-ui-1.11.4-custom.css" th:href="@{/css/vendor/jquery-ui-1.11.4-custom.min.css}" rel="stylesheet"/>
+	<script th:inline="javascript">var ctx = [[@{'/'}]] /*"http://localhost:8080/factbook"*/</script>
+	<script type="text/javascript" th:href="@{/js/vendor/jquery-2.1.0.min.js}" src="../../../js/vendor/jquery-2.1.0.js"></script>
+	<script type="text/javascript" th:href="@{/js/vendor/jquery-ui-1.11.4-custom.min.js}" src="../../../js/vendor/jquery-ui-1.11.4-custom.js"></script>
+	<script type="text/javascript" th:href="@{/js/common.js}" src="../../../js/common.js"></script>
+</head>
+
+<body>
+<div class="wrapper">
+	<header class="header">
+		<div class="header_block" th:fragment="header">
+		
+			<span tiles:substituteby="logo"></span>
+			<!-- Authorized -->
+			<div class="block_prof" th:if='${user != null and user.getLogin() != ""}'>
+				<a href="#" onclick="showLogoutBox(event)"><img src="../../../images/prof_img.png" width="35" height="35" alt="img" /></a>
+				<a href="#" class="my_profile" th:href="@{/home}">My profiles</a>
+
+				<div id="logoutBox">
+					<div class="dialog_logout">
+						<span class="ds"></span>
+						<p th:text="${user.getEmail()}">test@test.ru</p>
+						<a href="#" th:href="@{/logout}" class="login_btn">Log off</a>
+					</div>
+				</div>
+			</div>
+			<!-- Authorized -->
+			<!-- Login -->
+			<div class="login_button" th:if='${user == null or user.getLogin() == ""}'>
+				<span tiles:substituteby="msg"></span>
+				<a class="login_btn" href="#" onclick="showLoginBox(event)">Login</a>
+				<div id="loginBox">
+					<div class="dialog_login">
+						<form action="#" th:action="@{/j_spring_security_check}" method="POST">
+							<span class="ds"></span>
+							<input class="input_f" type="text" value="" placeholder="Login" name="j_username"/>
+							<input class="input_f" type="password" value="" placeholder="Password" name="j_password" />
+							<button class="input_btn" value="" name="btnn" type="submit">login</button>
+							<div class="clear"></div>
+							<a href="#">Remember password</a>
+							<a href="#" onclick="showRegisterBox(event)">Register</a>
+						</form>
+					</div>
+				</div>
+                <!-- Register -->
+                <div id="registerBox" class="register_box"
+                     th:class="(${registerException != null}) ? 'register_box_visible' : 'register_box'">
+                    <div class="dialog_login">
+                        <form action="#" th:action="@{/user/new}" method="POST">
+                            <div th:if="${registerException != null}">
+                                <p class="red_s" th:text="${registerException}">User with e-mail vasya@www.com already exists.</p>
+                            </div>
+                            <input class="input_f" type="email" placeholder="email" id="fLogin" name="login"/>
+                            <input class="input_f" placeholder="password" type="password" id="fPass" name="pass"/>
+                            <input class="input_f" placeholder="retype password" type="password" id="fPassCheck" name="passCheck"/>
+                            <button class="input_btn" value="" name="btnn" type="submit">Register</button>
+                            <div class="clear"></div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Register -->
+			</div>
+			<!-- Login -->
+
+			<div tiles:substituteby="search"></div>
+		</div>
+		<div tiles:substituteby="hr"></div>
+		<div tiles:substituteby="crumbs"></div>
+	
+	</header>
+
+	<!--
+    *****************************************************************************************************************
+        Here content from the particular page will be rendered
+    *****************************************************************************************************************
+    -->
+    <div tiles:substituteby="content"></div>
+	<div tiles:substituteby="scripts"></div>
+</div>
+<footer class="footer" th:fragment="footer">
+
+
+	<div class="footer_block">
+		<p align="center">
+			&nbsp;&nbsp;<a href="/about/Factbook - Semantic Technologies.pdf">About</a> 
+		&nbsp;&nbsp;<a href="/about/help.html">Help</a>
+		  &nbsp;&nbsp;&nbsp;&nbsp;© Factbook 2017</p>
+	</div>
+</footer><!-- .footer -->
+
+</body>
+</html>

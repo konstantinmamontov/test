@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org">
+<head th:replace="parts/base :: meta"></head>
+
+<body>
+
+<div class="wrapper">
+    <header class="header">
+        <div class="header_block" th:replace="parts/base :: header"></div>
+    </header>
+    <!-- ******************************************************************************
+            Error message
+         ****************************************************************************** -->
+    <main class="container" tiles:fragment="content">
+        <div class="content_block">
+            <h1 th:text="${errorCode}">500</h1>
+
+            <p th:text="${errorMessage}" style="margin: 20px">java.lang.NullPointerException</p>
+        </div>
+    </main>
+    <!-- /container -->
+</div>
+<!-- /wrapper -->
+
+<footer class="footer" th:replace="parts/base :: footer"></footer>
+
+</body>
+</html>

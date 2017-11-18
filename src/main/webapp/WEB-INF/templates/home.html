@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:tiles="http://www.thymeleaf.org">
+<head th:replace="parts/base :: meta"></head>
+
+<body>
+<div>
+		<a href="/about/help.html">Help!</a>
+</div>
+<div class="wrapper">
+	<header class="header">
+		<div class="header_block" th:replace="parts/base :: header"></div>
+		<span tiles:fragment="search"></span>
+		
+		<div class="header_block" tiles:fragment="crumbs">
+			<a href="#" th:href="@{/home}" class="step active_step"
+			
+			title="!Define topic, then select and keep facts if they look like what you mean">
+			Step 1: Define a Topic</a>
+			
+			<span class="step_none_active"
+			title="Show more facts on this topic, selected facts will help the system to understand what you mean">
+			Step 2: More facts</span>
+			
+			<span class="step_none_active"
+			title="Get the facts by email">
+			Step 3: Export facts</span>
+			
+			<div class="clear"></div>
+		</div>
+	</header>
+
+
+	<main class="content" tiles:fragment="content">
+
+		<div class="content_block">
+			<div class="logo"></div>
+            <div th:replace="parts/search :: search"></div>
+            <div class="clear"></div>
+
+			<div th:if="${profiles != null}">
+				<h1 th:inline="text">
+                    [[${'My profiles (' + profiles.size() + ')'}]]
+                    <span th:if="${viewDebug}">
+                        <a href="#" th:href="@{/debug/semanticSearch}"><span class="glyphicon glyphicon-cog" style="font-size: 24px; margin-bottom: 4px;"></span></a>
+                    </span>
+                </h1>
+	            <div class="block_my_profiles" th:each="profile: ${profiles}">
+					<span class="del_item btn-sm" onclick="deleteProfile(this, 1)"
+							th:onclick="'deleteProfile(this, ' + ${profile.id} + ')'"></span>
+					<span class="edit_item btn-sm" onclick="editName(this, 1)"
+						  th:onclick="'editName(this, ' + ${profile.id} + ')'"></span>
+					<a href="#" th:href="@{${'/profile/found/' + profile.id + '/phrases'}}" class="link_pr">
+						<span  id="editable.1" th:id="'editable.'+ ${profile.id}" class="editable" th:text="${profile.name}">
+							Biomass
+						</span>
+						<span type="text" class="edit_link_pr" th:text="${' (' + profile.kept + ' facts)'}">
+							(6 facts)
+						</span>
+					</a>
+	            </div>
+            </div>
+            
+		</div>
+	</main><!-- .content -->
+
+
+	
+	<div tiles:fragment="scripts">
+	    <script src="../../js/vendor/jquery.jeditable-1.7.3.js"
+	            th:src="@{/js/vendor/jquery.jeditable-1.7.3.min.js}"></script>
+	    <script src="../../js/home.js" th:src="@{/js/home.js}"></script>
+	</div>
+
+</div><!-- .wrapper -->
+
+<footer th:replace="parts/base :: footer"></footer>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org">
+<head>
+    <link href="../../css/vendor/dagre-d3-simple.css" rel="stylesheet" media="screen"
+          th:href="@{/css/vendor/dagre-d3-simple.css}"/>
+    <link href="../../css/vendor/digraph.css" rel="stylesheet" media="screen"
+          th:href="@{/css/vendor/digraph.css}"/>
+    <script type="text/javascript" src="../../js/vendor/d3.min.js"></script>
+    <script type="text/javascript" src="../../js/vendor/dagre.min.js"></script>
+    <script type="text/javascript" src="../../js/vendor/dagre-d3-simple.js"></script>
+    <script type="text/javascript" src="../../js/vendor/jquery-2.1.0.min.js"></script>
+    <script th:inline="javascript">
+        // <![CDATA[
+        window.onload = function(){
+            var nodes = /*[[${nodes}]]*/ [[{label: "root", id: 0},{label: "child1", id: 1},{label: "child2", id: 2}],[{label: "root1", id: 0},{label: "child11", id: 1},{label: "child12", id: 2}]];
+            var edges = /*[[${edges}]]*/ [[{source: 0, target: 1, id: "0-1"},{source: 0, target: 2, id: "0-2"}],[{source: 0, target: 1, id: "0-1"},{source: 0, target: 2, id: "0-2"}]];
+            var field = $('#svg-canvas');
+
+            for(var i = 0; i < nodes.length; i++){
+                field.html(field.html() + '<svg id="svg' + i + '" style="position: absolute; left:' + 400*i + 'px; width: 100%; height: 100%;"></svg>');
+            }
+            for(var i = 0; i < nodes.length; i++) {
+                renderJSObjsToD3(nodes[i], edges[i], '#svg' + i);
+            }
+
+        }
+        // ]]>
+    </script>
+</head>
+<body>
+    <div style="width:1200px; height:950px;" id="svg-canvas"></div>
+</body>
+</html>
